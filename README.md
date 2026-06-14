@@ -1,18 +1,20 @@
 <div align="center">
 
-# 🤖 Free Claude Code
+# 🤖 Free Claude Code AR
 
 Use Claude Code CLI, VS Code, JetBrains ACP, or chat bots through your own Anthropic-compatible proxy.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Python 3.14](https://img.shields.io/badge/python-3.14-3776ab.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json&style=for-the-badge)](https://github.com/astral-sh/uv)
-[![Tested with Pytest](https://img.shields.io/badge/testing-Pytest-00c0ff.svg?style=for-the-badge)](https://github.com/Alishahryar1/free-claude-code/actions/workflows/tests.yml)
+[![Tested with Pytest](https://img.shields.io/badge/testing-Pytest-00c0ff.svg?style=for-the-badge)](https://github.com/osos3lom/free-claude-code-ar/actions/workflows/tests.yml)
 [![Type checking: Ty](https://img.shields.io/badge/type%20checking-ty-ffcc00.svg?style=for-the-badge)](https://pypi.org/project/ty/)
 [![Code style: Ruff](https://img.shields.io/badge/code%20formatting-ruff-f5a623.svg?style=for-the-badge)](https://github.com/astral-sh/ruff)
 [![Logging: Loguru](https://img.shields.io/badge/logging-loguru-4ecdc4.svg?style=for-the-badge)](https://github.com/Delgan/loguru)
 
-Free Claude Code routes Anthropic Messages API traffic from Claude Code to any provider. It keeps Claude Code's client-side protocol stable while letting you choose free, paid, or local models.
+Free Claude Code AR routes Anthropic Messages API traffic from Claude Code to any provider. It keeps Claude Code's client-side protocol stable while letting you choose free, paid, or local models.
+
+> **Based on [free-claude-code](https://github.com/osos3lom/free-claude-code-ar) by [@Alishahryar1](https://github.com/Alishahryar1).** This fork adds a Next.js 16 admin frontend, a `/backend`+`/frontend` monorepo layout, and an optional Neon PostgreSQL persistence layer.
 
 [Quick Start](#quick-start) · [Providers](#choose-a-provider) · [Clients](#connect-claude-code) · [Integrations](#optional-integrations) · [Development](#development)
 
@@ -31,11 +33,11 @@ Free Claude Code routes Anthropic Messages API traffic from Claude Code to any p
 ## Star History
 
 <div align="center">
-  <a href="https://star-history.com/#Alishahryar1/free-claude-code&Date">
+  <a href="https://star-history.com/#osos3lom/free-claude-code-ar&Date">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Alishahryar1/free-claude-code&type=Date&theme=dark">
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Alishahryar1/free-claude-code&type=Date">
-      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Alishahryar1/free-claude-code&type=Date" width="700">
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=osos3lom/free-claude-code-ar&type=Date&theme=dark">
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=osos3lom/free-claude-code-ar&type=Date">
+      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=osos3lom/free-claude-code-ar&type=Date" width="700">
     </picture>
   </a>
 </div>
@@ -50,7 +52,7 @@ Free Claude Code routes Anthropic Messages API traffic from Claude Code to any p
 - Optional Discord or Telegram bot wrapper for remote coding sessions.
 - Optional Usage through the VSCode extension.
 - Optional voice-note transcription through local Whisper or NVIDIA NIM.
-- Local **Admin UI** at `/admin` to edit supported proxy settings, validate changes, and check providers (loopback access only).
+- **Admin UI** at `http://localhost:3000` — a Next.js 16 SPA (Arabic-first, RTL) to edit all proxy settings, validate changes, check providers, and view metrics.
 
 ## Quick Start
 
@@ -59,16 +61,16 @@ Free Claude Code routes Anthropic Messages API traffic from Claude Code to any p
 macOS/Linux:
 
 ```bash
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh
+curl -fsSL "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.sh" | sh
 ```
 
 Windows PowerShell:
 
 ```powershell
-irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1" | iex
+irm "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.ps1" | iex
 ```
 
-Review the installers at [scripts/install.sh](https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh) and [scripts/install.ps1](https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1). Re-run these commands to update to the latest version.
+Review the installers at [scripts/install.sh](https://github.com/osos3lom/free-claude-code-ar/blob/main/scripts/install.sh) and [scripts/install.ps1](https://github.com/osos3lom/free-claude-code-ar/blob/main/scripts/install.ps1). Re-run these commands to update to the latest version.
 
 ### 2. Start The Proxy
 
@@ -76,17 +78,20 @@ Review the installers at [scripts/install.sh](https://github.com/Alishahryar1/fr
 fcc-server
 ```
 
-After startup, Uvicorn prints the proxy bind address and the app logs the admin URL:
+After startup, Uvicorn prints the proxy bind address. Open the admin frontend separately (see below).
 
-```text
-INFO:     Admin UI: http://127.0.0.1:8082/admin (local-only)
+### 2b. Start The Admin Frontend (optional, separate terminal)
+
+```bash
+cd frontend
+npm run dev
 ```
 
-Many terminals make these clickable. Use your configured `PORT` if it is not `8082`.
+The admin UI opens at **http://localhost:3000** — an Arabic-first, dark-theme SPA.
 
 ### 3. Open The Admin UI And Configure NVIDIA NIM
 
-Open the **Admin UI** URL from the terminal output.
+Open **http://localhost:3000** in your browser.
 
 Need an NVIDIA NIM API key? Use the **[NVIDIA NIM provider](#nvidia-nim-provider)** section below, then scroll back up here.
 
@@ -359,7 +364,7 @@ Restart the IDE after changing the file.
 
 ## Optional Integrations
 
-For every integration below, change **managed proxy settings** only in the **Admin UI** at `/admin`: edit fields, click **Validate**, then **Apply**. The footer shows where the managed config is stored; this README does not walk through editing that file by hand.
+For every integration below, change **managed proxy settings** only in the **Admin UI** at `http://localhost:3000`: edit fields, click **Validate**, then **Apply**. The footer shows where the managed config is stored; this README does not walk through editing that file by hand.
 
 ### 1. Discord And Telegram Bots
 
@@ -379,7 +384,7 @@ The bot wrapper runs Claude Code sessions remotely, streams progress, supports r
 
 **Configure in the Admin UI**
 
-1. With `fcc-server` running, open the **Admin UI** URL from the terminal output.
+1. With `fcc-server` and `npm run dev` running, open **http://localhost:3000**.
 2. In the sidebar, choose **Messaging**.
 3. Set **Messaging Platform** to **discord** or **telegram**.
 4. For Discord, paste **Discord Bot Token** and **Allowed Discord Channels**. For Telegram, paste **Telegram Bot Token** and **Allowed Telegram User ID**.
@@ -406,32 +411,32 @@ macOS/Linux:
 
 ```bash
 # NVIDIA NIM transcription (Riva gRPC)
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-nim
+curl -fsSL "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.sh" | sh -s -- --voice-nim
 
 # Local Whisper (CPU or CUDA)
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-local
+curl -fsSL "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.sh" | sh -s -- --voice-local
 
 # Both backends
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-all
+curl -fsSL "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.sh" | sh -s -- --voice-all
 
 # Local Whisper with CUDA
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-local --torch-backend cu130
+curl -fsSL "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.sh" | sh -s -- --voice-local --torch-backend cu130
 ```
 
 Windows PowerShell:
 
 ```powershell
 # NVIDIA NIM transcription (Riva gRPC)
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceNim
+& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.ps1"))) -VoiceNim
 
 # Local Whisper (CPU or CUDA)
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceLocal
+& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.ps1"))) -VoiceLocal
 
 # Both backends
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceAll
+& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.ps1"))) -VoiceAll
 
 # Local Whisper with CUDA
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceLocal -TorchBackend cu130
+& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/osos3lom/free-claude-code-ar/main/scripts/install.ps1"))) -VoiceLocal -TorchBackend cu130
 ```
 
 Restart `fcc-server` after reinstalling.
@@ -460,30 +465,48 @@ Important pieces:
 ### 1. Project Structure
 
 ```text
-free-claude-code/
-├── server.py              # ASGI entry point
-├── api/                   # FastAPI routes, service layer, routing, optimizations
-├── core/                  # Shared Anthropic protocol helpers and SSE utilities
-├── providers/             # Provider transports, registry, rate limiting
-├── messaging/             # Discord/Telegram adapters, sessions, voice
-├── cli/                   # Package entry points and Claude process management
-├── config/                # Settings, provider catalog, logging
-└── tests/                 # Unit and contract tests
+free-claude-code-ar/
+├── backend/               # Python FastAPI proxy
+│   ├── server.py          # ASGI entry point
+│   ├── api/               # FastAPI routes, service layer, routing, optimizations
+│   ├── core/              # Shared Anthropic protocol helpers and SSE utilities
+│   ├── providers/         # Provider transports, registry, rate limiting
+│   ├── messaging/         # Discord/Telegram adapters, sessions, voice
+│   ├── cli/               # Package entry points and Claude process management
+│   ├── config/            # Settings, provider catalog, logging
+│   ├── db/                # SQLAlchemy models, repositories, Alembic migrations
+│   └── tests/             # Unit and contract tests
+└── frontend/              # Next.js 16 admin UI (Arabic-first, RTL, dark theme)
+    ├── src/app/           # App Router pages: dashboard, providers, models, …
+    ├── src/components/    # ConfigForm, ProviderCard, StatusBadge, Sidebar, …
+    ├── src/lib/api.ts     # Typed Axios client for /admin/api/*
+    └── messages/          # i18n: ar.json (primary), en.json
 ```
 
 ### 2. Run From Source
 
-Use this path if you are developing or want to run directly from a checkout:
-
 ```bash
-git clone https://github.com/Alishahryar1/free-claude-code.git
-cd free-claude-code
-uv run uvicorn server:app --host 0.0.0.0 --port 8082
+git clone https://github.com/osos3lom/free-claude-code-ar.git
+cd free-claude-code-ar
+
+# Terminal 1 — backend proxy on :8082
+cd backend && uv run fcc-server
+
+# Terminal 2 — admin frontend on :3000
+cd frontend && npm install && npm run dev
 ```
 
-### 3. Commands
+Or use the Makefile shortcuts:
 
 ```bash
+make backend    # FastAPI on :8082
+make frontend   # Next.js on :3000
+```
+
+### 3. Backend Commands
+
+```bash
+cd backend
 uv run ruff format
 uv run ruff check
 uv run ty check
@@ -491,6 +514,25 @@ uv run pytest
 ```
 
 Run them in that order before pushing. CI enforces the same checks.
+
+### 3b. Frontend Commands
+
+```bash
+cd frontend
+npm run build   # production build
+npm run lint    # ESLint
+```
+
+### 4. Database (optional)
+
+Set `DATABASE_URL` to a Neon PostgreSQL connection string, then run migrations:
+
+```bash
+cd backend
+DATABASE_URL=postgresql://... uv run alembic upgrade head
+```
+
+Without `DATABASE_URL`, the proxy runs entirely in-memory as before.
 
 ### 4. Package Scripts
 
@@ -510,13 +552,21 @@ Run them in that order before pushing. CI enforces the same checks.
 
 ## Contributing
 
-- [`.env.example`](.env.example) lists env key names as a read-only reference for contributors; use the **Admin UI** to change managed proxy settings.
-- Report bugs and feature requests in [Issues](https://github.com/Alishahryar1/free-claude-code/issues). For bug always include all model mapping, current model when issue occured and the issue string
+- [`backend/.env.example`](backend/.env.example) lists env key names as a read-only reference for contributors; use the **Admin UI** to change managed proxy settings.
+- Report bugs and feature requests in [Issues](https://github.com/osos3lom/free-claude-code-ar/issues). For bugs always include all model mapping, the current model when the issue occurred, and the issue string.
 - Keep changes small and covered by focused tests.
 - Do not open Docker integration PRs.
-- Do not open README change PRs just open an issue for it.
-- Run the full check sequence before opening a pull request.
-- The syntax `except X, Y` is brought back in python 3.14 final version (not in 3.14 alpha). Keep in mind before opening PRs.
+- Run `make lint` and `make test` from the repo root before opening a pull request.
+- The syntax `except X, Y` is brought back in Python 3.14 final (not in alpha). Keep in mind before opening PRs.
+
+## Upstream
+
+This project is a fork of [free-claude-code](https://github.com/Alishahryar1/free-claude-code) by [@Alishahryar1](https://github.com/Alishahryar1), used under the MIT License. Significant changes in this fork:
+
+- Monorepo split: all Python code moved to `backend/`, new `frontend/` for the admin UI.
+- Admin UI replaced with a Next.js 16 App Router SPA (Arabic-first, RTL, dark theme, all 9 pages complete).
+- Optional Neon PostgreSQL layer (`db/`) via SQLAlchemy async + Alembic migrations.
+- Install scripts updated to point to this repository.
 
 ## License
 

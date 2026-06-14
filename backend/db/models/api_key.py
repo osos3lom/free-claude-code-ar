@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID
@@ -20,7 +20,9 @@ class ApiKey(Base):
     key_hint: Mapped[str] = mapped_column(String(16), nullable=False)
     label: Mapped[str] = mapped_column(String(128), nullable=False, default="")
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(UTC),
     )
     last_used_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True

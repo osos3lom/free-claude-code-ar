@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import DateTime, Index, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
@@ -27,5 +27,7 @@ class RequestMetric(Base):
     status: Mapped[str] = mapped_column(String(16), nullable=False)
     error_type: Mapped[str | None] = mapped_column(String(128), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(UTC),
     )

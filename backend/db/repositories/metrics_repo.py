@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,7 +39,7 @@ class MetricsRepository:
         await self._session.commit()
 
     async def summary(self, hours: int = 24) -> dict:
-        since = datetime.now(timezone.utc) - timedelta(hours=hours)
+        since = datetime.now(UTC) - timedelta(hours=hours)
         stmt = select(
             func.count(RequestMetric.id).label("total_requests"),
             func.sum(RequestMetric.input_tokens).label("total_input_tokens"),

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import DateTime, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
@@ -17,7 +17,9 @@ class SettingsSnapshot(Base):
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(UTC),
     )
     applied_by: Mapped[str] = mapped_column(String(64), nullable=False, default="admin")
     env_content: Mapped[str] = mapped_column(Text, nullable=False)

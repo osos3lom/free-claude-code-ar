@@ -6,8 +6,8 @@ from .settings_snapshot import SettingsSnapshot
 
 __all__ = [
     "ApiKey",
-    "RequestMetric",
     "MessagingSession",
+    "RequestMetric",
     "SessionMessage",
     "SettingsSnapshot",
 ]

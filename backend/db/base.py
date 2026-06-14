@@ -63,7 +63,7 @@ def is_db_enabled() -> bool:
     return _database_url() is not None
 
 
-async def get_async_session() -> AsyncGenerator[AsyncSession | None, None]:
+async def get_async_session() -> AsyncGenerator[AsyncSession | None]:
     """FastAPI dependency: yields an async session or None when DB is not configured."""
     factory = get_session_factory()
     if factory is None:

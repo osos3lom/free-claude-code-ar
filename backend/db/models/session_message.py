@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, ForeignKey, Index, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from db.base import Base
+
+if TYPE_CHECKING:
+    from db.models.session import MessagingSession
 
 
 class SessionMessage(Base):
@@ -26,7 +30,9 @@ class SessionMessage(Base):
     direction: Mapped[str] = mapped_column(String(8), nullable=False)
     kind: Mapped[str] = mapped_column(String(16), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(UTC),
     )
 
-    session: Mapped["MessagingSession"] = relationship(back_populates="messages")  # noqa: F821
+    session: Mapped[MessagingSession] = relationship(back_populates="messages")

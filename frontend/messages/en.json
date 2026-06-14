@@ -1,0 +1,133 @@
+{
+  "app": {
+    "title": "Free Claude Code",
+    "subtitle": "Server Control"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "providers": "Providers",
+    "models": "Model Config",
+    "messaging": "Messaging",
+    "voice": "Voice",
+    "webTools": "Web Tools",
+    "metrics": "Metrics"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "status": "Status",
+    "running": "Running",
+    "host": "Host",
+    "port": "Port",
+    "model": "Model",
+    "provider": "Provider",
+    "pendingFields": "Pending Fields",
+    "noPendingFields": "No pending fields",
+    "cachedModels": "Cached Models",
+    "noModels": "No models",
+    "loading": "Loading status"
+  },
+  "providers": {
+    "title": "Providers",
+    "strip": "Providers",
+    "test": "Test",
+    "testing": "Testing",
+    "refreshModels": "Refresh models",
+    "noLocalUrl": "No local URL configured",
+    "modelsCount": "{n} models",
+    "noModels": "No models returned",
+    "returnedHttp": "{url} returned HTTP {code}",
+    "localStatus": "Local Status"
+  },
+  "config": {
+    "validate": "Validate",
+    "apply": "Apply",
+    "noChanges": "No changes",
+    "unsavedOne": "1 unsaved change",
+    "unsavedMany": "{n} unsaved changes",
+    "showAdvanced": "Show advanced",
+    "hideAdvanced": "Hide advanced",
+    "inherit": "Inherit",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "secretConfigured": "Configured - enter a new value to replace",
+    "secretNotConfigured": "Not configured",
+    "loading": "Loading admin config",
+    "validShape": "Config shape is valid",
+    "applied": "Applied",
+    "applyingRestart": "Applied. Restarting server...",
+    "appliedPending": "Applied. Restart fcc-server to use: {fields}",
+    "envPreview": ".env preview"
+  },
+  "status": {
+    "configured": "Configured",
+    "missing_key": "Missing key",
+    "reachable": "Reachable",
+    "offline": "Offline",
+    "missing_url": "Missing URL",
+    "unknown": "Not checked"
+  },
+  "sections": {
+    "providers": {
+      "label": "Providers",
+      "description": "Provider keys, local endpoints, and proxy settings."
+    },
+    "models": {
+      "label": "Model Routing",
+      "description": "Provider-prefixed models used for Claude model tiers."
+    },
+    "thinking": {
+      "label": "Thinking",
+      "description": "Global and tier-specific thinking behavior."
+    },
+    "runtime": {
+      "label": "Runtime",
+      "description": "Server API token, rate limits, timeouts, and process settings."
+    },
+    "messaging": {
+      "label": "Messaging",
+      "description": "Discord, Telegram, CLI workspace, and session settings."
+    },
+    "voice": {
+      "label": "Voice",
+      "description": "Voice note transcription settings."
+    },
+    "web_tools": {
+      "label": "Web Tools",
+      "description": "Local Anthropic web_search and web_fetch behavior."
+    },
+    "diagnostics": {
+      "label": "Diagnostics",
+      "description": "Logging and debugging flags."
+    },
+    "smoke": {
+      "label": "Smoke Tests",
+      "description": "Optional live smoke-test model overrides."
+    }
+  },
+  "fields": {},
+  "metrics": {
+    "title": "Metrics",
+    "requestsPerMinute": "Requests / min",
+    "tokenUsage": "Token usage",
+    "totalRequests": "Total requests",
+    "totalTokens": "Total tokens",
+    "errorRate": "Error rate",
+    "avgLatency": "Avg latency",
+    "today": "Today",
+    "last24h": "Last 24 h",
+    "last7d": "Last 7 days",
+    "noData": "No metrics data. Add DATABASE_URL to enable tracking.",
+    "inputTokens": "Input tokens",
+    "outputTokens": "Output tokens"
+  },
+  "common": {
+    "loading": "Loading",
+    "error": "Error",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "langToggle": "عربي"
+  }
+}

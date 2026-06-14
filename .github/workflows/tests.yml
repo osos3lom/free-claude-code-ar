@@ -71,3 +71,4 @@ jobs:
 
       - name: Run
         run: ${{ matrix.run }}
+        working-directory: backend

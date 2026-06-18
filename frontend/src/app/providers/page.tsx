@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { RefreshCw } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { ProviderCard } from "@/components/providers/ProviderCard";
 import { ConfigForm } from "@/components/config/ConfigForm";
+import { SkeletonCards, SkeletonForm } from "@/components/shared/Skeleton";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { adminApi, type ConfigResponse, type LocalProviderCheck } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -27,57 +32,66 @@ export default function ProvidersPage() {
     setLoadingRefresh(false);
   }
 
-  if (!config) {
-    return (
-      <Shell>
-        <div className="p-6 text-sm text-[var(--text-muted)]">
-          {isRtl ? "جارٍ التحميل..." : "Loading…"}
-        </div>
-      </Shell>
-    );
-  }
-
   const localStatusMap = Object.fromEntries(localStatus.map((l) => [l.provider_id, l]));
 
-  const enrichedProviders = config.provider_status.map((p) => {
-    const local = localStatusMap[p.provider_id];
-    if (local) {
-      return { ...p, status: local.status, label: local.label };
-    }
-    return p;
-  });
+  const enrichedProviders = config
+    ? config.provider_status.map((p) => {
+        const local = localStatusMap[p.provider_id];
+        return local ? { ...p, status: local.status, label: local.label } : p;
+      })
+    : [];
 
   return (
     <Shell>
       <div className="p-6 max-w-4xl">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-lg font-semibold">{isRtl ? "المزوّدون" : "Providers"}</h1>
-          <button
-            type="button"
-            onClick={handleRefresh}
-            disabled={loadingRefresh}
-            className="text-xs px-3 py-1.5 rounded border border-[var(--border)] hover:border-[var(--accent)] disabled:opacity-40 transition-colors"
-          >
-            {loadingRefresh
-              ? isRtl ? "جارٍ التحديث..." : "Refreshing…"
-              : isRtl ? "تحديث النماذج" : "Refresh models"}
-          </button>
-        </div>
+        <PageHeader
+          title={isRtl ? "المزوّدون" : "Providers"}
+          description={
+            isRtl
+              ? "إدارة مزوّدي النماذج واختبار الاتصال"
+              : "Manage AI model providers and test connectivity"
+          }
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={loadingRefresh || !config}
+              className="gap-1.5 h-8 text-xs"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${loadingRefresh ? "animate-spin" : ""}`} />
+              {loadingRefresh
+                ? isRtl ? "جارٍ التحديث…" : "Refreshing…"
+                : isRtl ? "تحديث النماذج" : "Refresh models"}
+            </Button>
+          }
+        />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
-          {enrichedProviders.map((p) => (
-            <ProviderCard key={p.provider_id} provider={p} lang={lang} />
-          ))}
-        </div>
+        {!config ? (
+          <SkeletonCards count={6} />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
+            {enrichedProviders.map((p) => (
+              <ProviderCard key={p.provider_id} provider={p} lang={lang} />
+            ))}
+          </div>
+        )}
 
-        <h2 className="text-base font-semibold mb-4">
+        <Separator className="my-6" />
+
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4">
           {isRtl ? "إعدادات المزوّدين" : "Provider Settings"}
         </h2>
-        <ConfigForm
-          sections={config.sections}
-          fields={config.fields}
-          sectionFilter={["providers"]}
-        />
+
+        {!config ? (
+          <SkeletonForm />
+        ) : (
+          <ConfigForm
+            sections={config.sections}
+            fields={config.fields}
+            sectionFilter={["providers"]}
+          />
+        )}
       </div>
     </Shell>
   );

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 type StatusValue = "configured" | "missing_key" | "reachable" | "offline" | "missing_url" | "unknown";
@@ -19,8 +20,8 @@ const COLOR_MAP: Record<string, string> = {
 export function StatusBadge({ status, label }: Props) {
   const colorClass = COLOR_MAP[status] ?? COLOR_MAP.unknown;
   return (
-    <span className={cn("text-[10px] px-2 py-0.5 rounded-full border font-medium", colorClass)}>
+    <Badge variant="outline" className={cn("text-[10px] font-medium", colorClass)}>
       {label ?? status}
-    </span>
+    </Badge>
   );
 }

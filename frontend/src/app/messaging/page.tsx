@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { ConfigForm } from "@/components/config/ConfigForm";
+import { SkeletonForm } from "@/components/shared/Skeleton";
 import { adminApi, type ConfigResponse } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -15,25 +17,24 @@ export default function MessagingPage() {
     adminApi.getConfig().then(setConfig);
   }, []);
 
-  if (!config) {
-    return (
-      <Shell>
-        <div className="p-6 text-sm text-[var(--text-muted)]">
-          {isRtl ? "جارٍ التحميل..." : "Loading…"}
-        </div>
-      </Shell>
-    );
-  }
-
   return (
     <Shell>
       <div className="p-6 max-w-2xl">
-        <h1 className="text-lg font-semibold mb-6">{isRtl ? "المراسلة" : "Messaging"}</h1>
-        <ConfigForm
-          sections={config.sections}
-          fields={config.fields}
-          sectionFilter={["messaging"]}
+        <PageHeader
+          title={isRtl ? "المراسلة" : "Messaging"}
+          description={
+            isRtl
+              ? "إعداد بوتات المراسلة كـ Telegram وSlack"
+              : "Configure messaging bots like Telegram and Slack"
+          }
         />
+        {!config ? <SkeletonForm /> : (
+          <ConfigForm
+            sections={config.sections}
+            fields={config.fields}
+            sectionFilter={["messaging"]}
+          />
+        )}
       </div>
     </Shell>
   );

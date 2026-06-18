@@ -2,6 +2,15 @@
 
 import { cn } from "@/lib/utils";
 import type { ConfigField as ConfigFieldSpec } from "@/lib/api";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const MASKED = "********";
 
@@ -45,27 +54,14 @@ export function ConfigField({ field, lang, overrideValue, onChange }: Props) {
             <p className="text-xs text-[var(--text-muted)] mt-0.5">{field.description}</p>
           )}
         </div>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={checked}
-          disabled={field.locked}
-          onClick={() => handleChange(checked ? "false" : "true")}
-          className={cn(
-            "relative w-10 h-5 rounded-full transition-colors",
-            checked ? "bg-[var(--accent)]" : "bg-[var(--border)]",
-            field.locked && "opacity-50 cursor-not-allowed",
-          )}
-        >
-          <span
-            className={cn(
-              "absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all",
-              isRtl
-                ? checked ? "right-0.5" : "right-5"
-                : checked ? "left-5" : "left-0.5",
-            )}
+        {/* dir=ltr so thumb translation stays correct regardless of page RTL direction */}
+        <div dir="ltr">
+          <Switch
+            checked={checked}
+            disabled={field.locked}
+            onCheckedChange={(c) => handleChange(c ? "true" : "false")}
           />
-        </button>
+        </div>
       </div>
     );
   }
@@ -82,21 +78,22 @@ export function ConfigField({ field, lang, overrideValue, onChange }: Props) {
         </p>
         <div className="flex gap-1.5">
           {opts.map((opt) => (
-            <button
+            <Button
               key={opt}
               type="button"
+              variant="outline"
+              size="sm"
               disabled={field.locked}
               onClick={() => handleChange(opt)}
               className={cn(
-                "px-3 py-1 rounded text-xs border transition-colors",
+                "text-xs h-7 px-3",
                 value === opt
                   ? "border-[var(--accent)] bg-[var(--accent-dim)] text-[var(--accent)]"
-                  : "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--text-muted)]",
-                field.locked && "opacity-50 cursor-not-allowed",
+                  : "border-[var(--border)] text-[var(--text-muted)]",
               )}
             >
               {labels[opt as keyof typeof labels]}
-            </button>
+            </Button>
           ))}
         </div>
         {field.description && (
@@ -112,19 +109,20 @@ export function ConfigField({ field, lang, overrideValue, onChange }: Props) {
         <p className={labelClass}>
           {label} {sourceTag}
         </p>
-        <select
-          value={value}
-          disabled={field.locked}
-          onChange={(e) => handleChange(e.target.value)}
-          className={inputClass}
-          style={{ direction: "ltr" }}
-        >
-          {field.options.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
+        <div dir="ltr">
+          <Select value={value} disabled={field.locked} onValueChange={handleChange}>
+            <SelectTrigger className="h-8 text-sm bg-[var(--surface-raised)] border-[var(--border)] focus:ring-[var(--accent)]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {field.options.map((opt) => (
+                <SelectItem key={opt} value={opt}>
+                  {opt}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         {field.description && (
           <p className="text-xs text-[var(--text-muted)] mt-1">{field.description}</p>
         )}

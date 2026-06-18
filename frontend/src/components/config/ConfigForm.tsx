@@ -5,6 +5,8 @@ import { adminApi, type ConfigField, type ConfigSection } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
 import { ConfigField as ConfigFieldComp } from "./ConfigField";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Props {
   sections: ConfigSection[];
@@ -92,17 +94,23 @@ export function ConfigForm({ sections, fields, sectionFilter, onApplied }: Props
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5 pb-24">
       {visibleSections.map((section) => {
         const sectionFields = fieldsBySection[section.id] ?? [];
         if (sectionFields.length === 0) return null;
         return (
-          <section key={section.id} className="border border-[var(--border)] rounded-lg p-4">
-            <h3 className="text-sm font-semibold mb-0.5">{section.label}</h3>
-            {section.description && (
-              <p className="text-xs text-[var(--text-muted)] mb-3">{section.description}</p>
-            )}
-            <div className="divide-y divide-[var(--border)]">
+          <section key={section.id} className="rounded-lg border border-[var(--border)]">
+            <div className="px-4 pt-3.5 pb-2.5 border-b border-[var(--border)] bg-[var(--surface)] rounded-t-lg">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                {section.label}
+              </h3>
+              {section.description && (
+                <p className="text-xs text-[var(--text-muted)] mt-0.5 font-normal normal-case tracking-normal">
+                  {section.description}
+                </p>
+              )}
+            </div>
+            <div className="divide-y divide-[var(--border)] px-4">
               {sectionFields.map((field) => (
                 <ConfigFieldComp
                   key={field.key}
@@ -118,28 +126,17 @@ export function ConfigForm({ sections, fields, sectionFilter, onApplied }: Props
       })}
 
       {!sectionFilter && (
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="text-xs text-[var(--text-muted)] hover:text-[var(--foreground)] text-start"
+          className="text-xs text-[var(--text-muted)] hover:text-[var(--foreground)] self-start px-0 h-auto"
         >
           {showAdvanced
             ? isRtl ? "إخفاء المتقدّم" : "Hide advanced"
             : isRtl ? "إظهار المتقدّم" : "Show advanced"}
-        </button>
-      )}
-
-      {message && (
-        <div
-          className={cn(
-            "text-sm px-3 py-2 rounded",
-            message.type === "ok" && "text-[var(--ok)] bg-[rgba(62,207,142,0.1)]",
-            message.type === "error" && "text-[var(--error)] bg-[rgba(239,68,68,0.1)]",
-            message.type === "warn" && "text-[var(--warn)] bg-[rgba(245,158,11,0.1)]",
-          )}
-        >
-          {message.text}
-        </div>
+        </Button>
       )}
 
       {envPreview && (
@@ -147,42 +144,64 @@ export function ConfigForm({ sections, fields, sectionFilter, onApplied }: Props
           <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--foreground)]">
             {isRtl ? "معاينة ملف .env" : ".env preview"}
           </summary>
-          <pre className="mt-2 p-3 bg-[var(--surface)] rounded overflow-x-auto text-[var(--text-secondary)] whitespace-pre-wrap" style={{ direction: "ltr" }}>
+          <pre className="mt-2 p-3 bg-[var(--surface)] rounded-lg overflow-x-auto text-[var(--text-secondary)] whitespace-pre-wrap" style={{ direction: "ltr" }}>
             {envPreview}
           </pre>
         </details>
       )}
 
-      <div className="flex items-center justify-between border-t border-[var(--border)] pt-4">
-        <span className="text-sm text-[var(--text-muted)]">
-          {dirtyCount === 0
-            ? isRtl ? "لا تغييرات" : "No changes"
-            : dirtyCount === 1
-              ? isRtl ? "تغيير واحد غير محفوظ" : "1 unsaved change"
-              : isRtl ? `${dirtyCount} تغييرات غير محفوظة` : `${dirtyCount} unsaved changes`}
-        </span>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            disabled={dirtyCount === 0 || loading !== null}
-            onClick={handleValidate}
-            className="px-4 py-1.5 text-sm rounded border border-[var(--border)] hover:border-[var(--accent)] disabled:opacity-40 transition-colors"
-          >
-            {loading === "validate"
-              ? isRtl ? "جارٍ..." : "..."
-              : isRtl ? "تحقّق" : "Validate"}
-          </button>
-          <button
-            type="button"
-            disabled={dirtyCount === 0 || loading !== null}
-            onClick={handleApply}
-            className="px-4 py-1.5 text-sm rounded bg-[var(--accent)] text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
-          >
-            {loading === "apply"
-              ? isRtl ? "جارٍ..." : "..."
-              : isRtl ? "تطبيق" : "Apply"}
-          </button>
-        </div>
+      {/* Sticky action bar — sticks to bottom of the main scroll container, not the viewport */}
+      <div className="sticky bottom-0 z-10 pt-2 pb-4">
+        <div className={cn(
+            "flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 shadow-lg shadow-black/30 transition-all duration-200",
+            dirtyCount === 0 ? "opacity-60" : "opacity-100",
+          )}>
+            <div className="flex items-center gap-2.5">
+              {message ? (
+                <span className={cn(
+                  "text-xs",
+                  message.type === "ok" && "text-[var(--ok)]",
+                  message.type === "error" && "text-[var(--error)]",
+                  message.type === "warn" && "text-[var(--warn)]",
+                )}>
+                  {message.text}
+                </span>
+              ) : (
+                <span className="text-xs text-[var(--text-muted)]">
+                  {dirtyCount === 0
+                    ? isRtl ? "لا تغييرات" : "No changes"
+                    : dirtyCount === 1
+                      ? isRtl ? "تغيير واحد غير محفوظ" : "1 unsaved change"
+                      : isRtl ? `${dirtyCount} تغييرات غير محفوظة` : `${dirtyCount} unsaved changes`}
+                </span>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={dirtyCount === 0 || loading !== null}
+                onClick={handleValidate}
+                className="h-7 text-xs"
+              >
+                {loading === "validate"
+                  ? isRtl ? "جارٍ..." : "…"
+                  : isRtl ? "تحقّق" : "Validate"}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={dirtyCount === 0 || loading !== null}
+                onClick={handleApply}
+                className="h-7 text-xs"
+              >
+                {loading === "apply"
+                  ? isRtl ? "جارٍ..." : "…"
+                  : isRtl ? "تطبيق" : "Apply"}
+              </Button>
+            </div>
+          </div>
       </div>
     </div>
   );
